@@ -17,6 +17,14 @@ public class CyberneticOrgan {
         return "ID: " + id + ", Model: " + model + ", Functionality: " + functionality + ", Compatibility: " + compatibility;
     }
 
+    public String getModel() {
+        return model;
+    }
+
+    public String getFunctionality() {
+        return functionality;
+    }
+
     public boolean isCompatible (String patientCompatibility) {
         return compatibility.equals(patientCompatibility);
     }
