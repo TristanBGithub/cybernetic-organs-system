@@ -2,6 +2,8 @@ package com.cybernetic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class OrganCompatibilityAnalyzer {
     private List<Organ> organs;
@@ -20,13 +22,26 @@ public class OrganCompatibilityAnalyzer {
         patients.add(patient);
     }
 
-    public int[][] createCompatibilityMatrix() {
-        int[][] matrix = new int[organs.size()][patients.size() * 3]; // 3 factors: blood type, weight, HLA
 
-        //TODO:  Calculate compatibility for each organ-patient pair
-
-        return matrix;
+    public List<Organ> getCompatibleOrgans(Patient patient) {
+        //TODO: Implement this method
+        throw new UnsupportedOperationException("Not implemented yet");
     }
+
+
+    public Map<Patient, List<Double>> calculateCompatibilityScores() {
+
+        //TODO: Implement this method
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    double calculateCompatibilityScore(Organ organ, Patient patient) {
+        double bloodTypeScore = calculateBloodTypeCompatibility(organ.getBloodType(), patient.getBloodType());
+        double weightScore = calculateWeightCompatibility(organ.getWeight(), patient.getWeight());
+        double hlaScore = calculateHlaCompatibility(organ.getHlaType(), patient.getHlaType());
+        return (bloodTypeScore * 0.4) + (weightScore * 0.3) + (hlaScore * 0.3);
+    }
+
 
     private int calculateBloodTypeCompatibility(String donorType, String recipientType) {
         //TODO: Calculate compatibility for each organ-patient pair based on compatibility calculation rules.
@@ -43,35 +58,6 @@ public class OrganCompatibilityAnalyzer {
         return 0;
     }
 
-    public double[][] calculateWeightedCompatibility(double[] weights) {
-        int[][] compatibilityMatrix = createCompatibilityMatrix();
-        double[][] resultMatrix = new double[organs.size()][patients.size()];
 
-        //TODO: calculate the weighted compatibility for each organ-patient pair
-
-        return resultMatrix;
-    }
-
-
-    public void displayMatrix(int[][] matrix) {
-        System.out.println("Initial Compatibility Matrix:");
-
-       //TODO: complete the displayMatrix method to display the initial compatibility matrix
-
-    }
-
-    public void displayWeightMatrix(double[] weights) {
-        System.out.println("\nWeight Matrix:");
-        for (double weight : weights) {
-            System.out.printf("%.2f  ", weight);
-        }
-        System.out.println();
-    }
-
-    public void displayWeightedMatrix(double[][] matrix) {
-        System.out.println("\nFinal Weighted Compatibility Matrix:");
-        System.out.print("     ");
-       //TODO: complete the displayWeightedMatrix method to display the final weighted compatibility matrix
-    }
 
 }
