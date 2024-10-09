@@ -5,25 +5,25 @@
 package com.cybernetic;
 
 public class CyberneticOrgan {
-    private String id;
+    private String name;
     private String model;
     private String functionality;
     private String compatibility;
     private int health = 100;
 
-    public CyberneticOrgan(String id, String model, String functionality, String compatibility) {
-        this.id = id;
+    public CyberneticOrgan(String name, String model, String functionality, String compatibility) {
+        this.name = name;
         this.model = model;
         this.functionality = functionality;
         this.compatibility = compatibility;
     }
 
     public String getDetails() {
-        return "ID: " + id + ", Model: " + model + ", Functionality: " + functionality + ", Compatibility: " + compatibility;
+        return "Name: " + name + ", Model: " + model + ", Functionality: " + functionality + ", Compatibility: " + compatibility;
     }
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
     public String getModel() {

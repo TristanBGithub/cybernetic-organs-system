@@ -4,7 +4,7 @@
 
 package com.cybernetic;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class OrganInventory {
     private ArrayList<CyberneticOrgan> inventory;
@@ -81,5 +81,57 @@ public class OrganInventory {
             }
         }
         return sortedList;
+    }
+
+    public static class OrganComparator implements Comparator<CyberneticOrgan> {
+        @Override
+        public int compare(CyberneticOrgan o1, CyberneticOrgan o2) {
+            int nameComparison = o1.getName().compareTo(o2.getName());
+            if (nameComparison != 0)
+                return nameComparison;
+
+            int modelComparison = o1.getModel().compareTo(o2.getModel());
+            if (modelComparison != 0)
+                return modelComparison;
+
+            return o1.getCompatibility().compareTo(o2.getCompatibility());
+        }
+    }
+
+    public ArrayList<CyberneticOrgan> sortOrganByNameModelAndCompatibilityUsingBuiltInSort() {
+        ArrayList<CyberneticOrgan> sortedList = new ArrayList<CyberneticOrgan>(inventory);
+        Collections.sort(sortedList, new OrganComparator());
+
+        return sortedList;
+    }
+
+    public void quickSortOrganByNameModelAndCompatibility(int low, int high) {
+        if (low < high) {
+            int partitionIndex = partition(inventory, low, high);
+
+            quickSortOrganByNameModelAndCompatibility(low, partitionIndex - 1);
+            quickSortOrganByNameModelAndCompatibility(partitionIndex + 1, high);
+        }
+    }
+
+    private int partition(ArrayList<CyberneticOrgan> list, int low, int high) {
+        CyberneticOrgan pivot = list.get(high);
+        int i = low - 1;
+        OrganComparator comparator = new OrganComparator();
+
+        for (int j = low; j < high; j++) {
+            if (comparator.compare(list.get(j), pivot) <= 0) {
+                i++;
+                CyberneticOrgan swapTemp = list.get(i);
+                list.set(i, list.get(j));
+                list.set(j, swapTemp);
+            }
+        }
+
+        CyberneticOrgan swapTemp = list.get(i + 1);
+        list.set(i + 1, list.get(high));
+        list.set(high, swapTemp);
+
+        return i + 1;
     }
 }
