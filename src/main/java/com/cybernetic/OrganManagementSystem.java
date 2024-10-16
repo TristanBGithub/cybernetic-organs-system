@@ -1,11 +1,7 @@
 package com.cybernetic;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class OrganManagementSystem {
@@ -18,18 +14,21 @@ public class OrganManagementSystem {
     }
 
     public Set<String> getUniqueBloodTypes() {
-        //TODO: Implement this method
-        throw new UnsupportedOperationException("Not implemented yet");
+        Set<String> bloodTypes = new HashSet<>();
+        for (Patient patient : patients)
+            bloodTypes.add(patient.getBloodType());
+        return bloodTypes;
     }
 
     public Map<String, List<Patient>> groupPatientsByBloodType() {
-        //TODO: Implement this method
-        throw new UnsupportedOperationException("Not implemented yet");
+        return getUniqueBloodTypes().stream().collect(Collectors.toMap(b -> b,
+                b -> patients.stream().filter(p -> p.getBloodType().equals(b)).collect(Collectors.toList())));
     }
 
     public List<Organ> sortOrgansByWeight() {
-        //TODO: Implement this method
-        throw new UnsupportedOperationException("Not implemented yet");
+        List<Organ> sortedList = new ArrayList<>(organs);
+        Collections.sort(sortedList, new organWeightComparator());
+        return sortedList;
     }
 
     public List<Organ> getTopCompatibleOrgans(Patient patient, int n) {
@@ -37,7 +36,12 @@ public class OrganManagementSystem {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-
+    public static class organWeightComparator implements Comparator<Organ> {
+        @Override
+        public int compare(Organ o1, Organ o2) {
+            return Integer.compare(o1.getWeight(), o2.getWeight());
+        }
+    }
 
 
 }
