@@ -1,4 +1,6 @@
 package com.cybernetic;
+
+
 import lombok.Data;
 
 @Data
@@ -16,4 +18,5 @@ class Organ {
         this.weight = weight;
         this.hlaType = hlaType;
     }
+
 }

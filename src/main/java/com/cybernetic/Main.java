@@ -1,68 +1,55 @@
 package com.cybernetic;
 
+
 public class Main {
     public static void main(String[] args) {
-        // Create a waiting list
-        WaitingList waitingList = new WaitingList();
 
-        // Create some patients
         Patient johnDoe = new Patient("P001", "John Doe", "A+", 70, "HLA-A");
         Patient janeSmith = new Patient("P002", "Jane Smith", "B-", 65, "HLA-B");
         Patient bobJohnson = new Patient("P003", "Bob Johnson", "O+", 80, "HLA-A");
         Patient aliceBrown = new Patient("P004", "Alice Brown", "AB-", 55, "HLA-C");
 
+        // Create patient waiting list
+        PatientWaitingList waitingList = new PatientWaitingList();
+
         // Add patients to the waiting list
-        System.out.println("Adding patients to the waiting list...");
-        waitingList.addPatient(johnDoe, 5);
-        waitingList.addPatient(janeSmith, 3);
-        waitingList.addPatient(bobJohnson, 4);
+        waitingList.addPatient(aliceBrown);
+        waitingList.addPatient(bobJohnson);
+        waitingList.addPatient(janeSmith);
+        waitingList.addPatient(johnDoe);
 
-        // Display initial waiting list
-        System.out.println("\nInitial Waiting List:");
-        waitingList.displayWaitingList();
+        // Print waiting list
+        waitingList.printWaitingList();
 
-        // Add a new patient
-        System.out.println("\nAdding new patient: Alice Brown (Priority: 6)");
-        waitingList.addPatient(aliceBrown, 6);
 
-        // Display updated waiting list
-        System.out.println("Updated Waiting List:");
-        waitingList.displayWaitingList();
+        // Add medical events to the patients
+        String[] events = {"Annual checkup","Flu vaccination","Broken arm surgery"};
+        System.out.println("\nAdding medical event to Alice's history: ");
+        for (String event : events) {
+            System.out.println("- " + event);
+            aliceBrown.addMedicalEvent(event);
+        }
 
-        // Remove highest priority patient
-        Patient removedPatient = waitingList.removeHighestPriority();
-        System.out.println("\nRemoving highest priority patient: " + removedPatient.getName());
+        // View and remove the latest medical event from Alice's history
+        System.out.println("\nViewing Alice's latest medical event: " + aliceBrown.getHistory().viewLatestEvent());
+        System.out.println("Removing Alice's latest medical event: " + aliceBrown.removeMostRecentEvent());
 
-        // Update priority for a patient
-        System.out.println("\nUpdating priority for Bob Johnson to 7");
-        waitingList.updatePriority("P003", 7);
 
-        // Display updated waiting list
-        System.out.println("Updated Waiting List:");
-        waitingList.displayWaitingList();
 
         // Create an organ
         Organ cyberHeart = new Organ("O001", "CyberHeart-X1", "A+", 350, "HLA-A");
 
-        // Create an OrganCompatibilityAnalyzer
-        OrganCompatibilityAnalyzer analyzer = new OrganCompatibilityAnalyzer();
+        Patient nextPatient = waitingList.removeNextPatient();
+        System.out.println("\nProcessing the next patient for CyberHeart-X1 transplant:");
+        System.out.println("Matched CyberHeart-X1 to " + nextPatient.getName());
 
-        // Match organ to waiting list
-        System.out.println("\nMatching "+cyberHeart.getName()+" to Waiting List:");
-        Patient matchedPatient = analyzer.findCompatiblePatient(cyberHeart, waitingList);
-        if (matchedPatient != null) {
-            int priority = waitingList.getPosition(matchedPatient.getId());
-            System.out.println("Compatible patient found: " + matchedPatient.getName() +
-                    " (Priority: " + priority + ")");
-        } else {
-            System.out.println("No compatible patient found in the waiting list.");
+        System.out.println("\nChecking " + nextPatient.getName() + "'s medical history for compatibility:");
+        while (!nextPatient.getHistory().isEmpty()) {
+            System.out.println("- " + nextPatient.getHistory().removeMostRecentEvent());
         }
 
-        //after matchingPatient is found, remove the patient from the waiting list
-        System.out.println("\nRemoving matched patient from the waiting list...");
-        waitingList.removePatient(matchedPatient.getId());
-        System.out.println("Updated Waiting List:");
-        waitingList.displayWaitingList();
+        System.out.println("\n" + nextPatient.getName() + " is compatible with "+cyberHeart.getName()+"!\n");
 
+        waitingList.printWaitingList();
     }
 }
