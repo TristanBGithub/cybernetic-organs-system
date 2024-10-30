@@ -32,8 +32,10 @@ public class OrganManagementSystem {
     }
 
     public List<Organ> getTopCompatibleOrgans(Patient patient, int n) {
-        //TODO: Implement this method
-        throw new UnsupportedOperationException("Not implemented yet");
+        OrganCompatibilityAnalyzer analyzer = new OrganCompatibilityAnalyzer();
+        return analyzer.getCompatibleOrgans(patient).stream()
+                .sorted(Comparator.comparingDouble(Organ -> analyzer.calculateCompatibilityScore(Organ, patient)))
+                .collect(Collectors.toList());
     }
 
     public static class organWeightComparator implements Comparator<Organ> {

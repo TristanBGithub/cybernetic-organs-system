@@ -24,7 +24,7 @@ public class OrganCompatibilityAnalyzer {
 
 
     public List<Organ> getCompatibleOrgans(Patient patient) {
-        return organs.stream().filter(o -> isCompatible(o, patient)).toList();
+        return organs.stream().filter(o -> isCompatible(o, patient)).collect(Collectors.toList());
     }
 
 
@@ -96,10 +96,7 @@ public class OrganCompatibilityAnalyzer {
     }
 
     private boolean isCompatible(Organ organ, Patient patient) {
-        if ((calculateBloodTypeCompatibility(organ.getBloodType(), patient.getBloodType()) > 0) && calculateWeightCompatibility(organ.getWeight(), patient.getWeight()) > 0)
-            return true;
-        else
-            return false;
+        return (calculateBloodTypeCompatibility(organ.getBloodType(), patient.getBloodType()) > 0) && calculateWeightCompatibility(organ.getWeight(), patient.getWeight()) > 0;
     }
 
 }
