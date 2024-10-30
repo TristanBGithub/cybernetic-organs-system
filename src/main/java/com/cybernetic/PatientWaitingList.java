@@ -4,13 +4,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class PatientWaitingList {
-    private Queue<Patient> waitingList;
+    private Queue<Patient> waitingList = new LinkedList<>();
     /**
      * Add a new patient to the end of the waiting list.
      * @param patient The patient to be added to the waiting list.
      */
     public void addPatient(Patient patient) {
-        throw new UnsupportedOperationException("Method not implemented");
+        waitingList.add(patient);
     }
 
     /**
@@ -18,7 +18,7 @@ public class PatientWaitingList {
      * @return The next patient in the waiting list.
      */
     public Patient removeNextPatient() {
-        throw new UnsupportedOperationException("Method not implemented");
+        return waitingList.remove();
     }
 
     /**
@@ -26,7 +26,7 @@ public class PatientWaitingList {
      * @return True if the waiting list is empty, false otherwise.
      */
     public boolean isEmpty() {
-        throw new UnsupportedOperationException("Method not implemented");
+        return waitingList.isEmpty();
 
     }
 
@@ -34,7 +34,19 @@ public class PatientWaitingList {
      * Print the current state of the patient waiting list.
      */
     public void printWaitingList() {
-        throw new UnsupportedOperationException("Method not implemented");
+        System.out.println("Current Waiting Queue:");
+
+        Queue<Patient> toPrint = new LinkedList<>(waitingList);
+        int num = 1;
+        for (Patient patient : waitingList) {
+            if (!toPrint.isEmpty()) {
+                System.out.print(num + ". [ " + toPrint.remove().getName() + " ]");
+                if (!toPrint.isEmpty())
+                    System.out.print(" <--- ");
+            }
+
+            num++;
+        }
     }
 
 }
