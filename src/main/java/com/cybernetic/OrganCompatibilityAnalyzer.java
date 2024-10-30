@@ -3,8 +3,15 @@ package com.cybernetic;
 public class OrganCompatibilityAnalyzer {
 
     public Patient findCompatiblePatient(Organ organ, WaitingList waitingList) {
-      //TODO: week - 8 Implement this method
-       throw new UnsupportedOperationException("Not implemented yet");
+        WaitingListNode currentNode = waitingList.getHead();
+        while (currentNode != null) {
+            if (isCompatible(organ, currentNode.patient)) {
+                return currentNode.patient;
+            }
+            currentNode = currentNode.next;
+        }
+
+        return null;
     }
 
 
@@ -18,20 +25,57 @@ public class OrganCompatibilityAnalyzer {
 
 
     private int calculateBloodTypeCompatibility(String donorType, String recipientType) {
-        //TODO: previous week Calculate compatibility for each organ-patient pair based on compatibility calculation rules.
-        return 0;
+        if (recipientType.equals(donorType))
+            return 100;
+        else
+            switch (recipientType) {
+                case "A+":
+                    if (donorType.equals("A-") || donorType.equals("O+") || donorType.equals("O-"))
+                        return 80;
+                    else
+                        return 0;
+                case "A-", "B-", "O+":
+                    if (donorType.equals("O-"))
+                        return 80;
+                    else return 0;
+                case "B+":
+                    if (donorType.equals("B-") || donorType.equals("O+") || donorType.equals("O-"))
+                        return 80;
+                    else
+                        return 0;
+                case "AB+":
+                    return 80;
+                case "AB-":
+                    if (donorType.equals("A-") || donorType.equals("B-") || donorType.equals("O-"))
+                        return 80;
+                    else
+                        return 0;
+                default:
+                    return 0;
+            }
     }
 
     private int calculateWeightCompatibility(int organWeight, int patientWeight) {
-       //TODO: previous week Calculate compatibility for each organ-patient pair based on compatibility calculation rules.
-        return 0;
+        double ratio = (double)organWeight / (patientWeight * 1000);
+        if (ratio >= 0.8 && ratio <= 1.2)
+            return 100;
+        else if (ratio >= 0.6 && ratio <= 1.4)
+            return 50;
+        else
+            return 0;
     }
 
     private int calculateHlaCompatibility(String organHla, String patientHla) {
-       //TODO: previous week Calculate compatibility for each organ-patient pair based on compatibility calculation rules.
-        return 0;
+        String[] organTokens = organHla.split("-");
+        String[] patientTokens = patientHla.split("-");
+
+        int matchCount = 0;
+        for (int i = 0; i < organTokens.length; i++) {
+            if (organTokens[i].equals(patientTokens[i]))
+                matchCount++;
+        }
+
+        return (int)(((double)matchCount / organTokens.length) * 100);
     }
-
-
 
 }
