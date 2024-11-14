@@ -1,171 +1,163 @@
 package com.cybernetic;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        OrganInventory inventory = new OrganInventory();
-        ArrayList<String> validationErrors = new ArrayList<>();
-        ArrayList<Patient> validPatients = new ArrayList<>();
+        // Initialize all components
+        TransplantHistory transplantHistory = new TransplantHistory();
+        SystemOperationsLog operationsLog = new SystemOperationsLog(100);
+        EmergencyWaitlist emergencyWaitlist = new EmergencyWaitlist();
 
-        System.out.println("Part 1 - CyberOrgan Hub Demonstration");
-        System.out.println("=====================================\n");
+        System.out.println("Part 2 - Advanced Data Structures Demo");
+        System.out.println("====================================\n");
 
-        // 1. Load and validate organs
-        System.out.println("1. Loading and Validating Organs...");
-        System.out.println("----------------------------------");
-        loadOrgans(inventory, validationErrors);
+        // 1. Demonstrate Transplant History
+        System.out.println("1. Transplant History Operations");
+        System.out.println("------------------------------");
+        System.out.println("Adding transplant records...");
 
-        // Print organ validation errors
-        System.out.println("\nOrgan Validation Errors:");
-        System.out.println("------------------------");
-        for (int i = 0; i < Math.min(5, validationErrors.size()); i++) {
-            System.out.println(validationErrors.get(i));
+        transplantHistory.addTransplantRecordAtBeginning(
+                new TransplantRecord("TR-001", "PAT-001", "ORG-001", "Dr. Smith", "Success")
+        );
+        System.out.println("Added: TR-001 (PAT-001, ORG-001, Success)");
+
+        transplantHistory.addTransplantRecordAtBeginning(
+                new TransplantRecord("TR-002", "PAT-002", "ORG-003", "Dr. Johnson", "Success")
+        );
+        System.out.println("Added: TR-002 (PAT-002, ORG-003, Success)");
+
+        transplantHistory.addTransplantRecordAtBeginning(
+                new TransplantRecord("TR-003", "PAT-003", "ORG-002", "Dr. Brown", "Pending")
+        );
+        System.out.println("Added: TR-003 (PAT-003, ORG-002, Pending)");
+
+        System.out.println("\nRecent Transplants (Last 2):");
+        List<TransplantRecord> recentTransplants = transplantHistory.getRecentTransplants(2);
+        for (int i = 0; i < recentTransplants.size(); i++) {
+            System.out.println((i + 1) + ". " + recentTransplants.get(i));
         }
 
-        if (validationErrors.size() > 5) {
-            System.out.printf("[...%d more validation errors...]\n",
-                    validationErrors.size() - 5);
+        // 2. Demonstrate System Operations Log
+        System.out.println("\n2. System Operations Log");
+        System.out.println("----------------------");
+        System.out.println("Pushing operations...");
+
+        operationsLog.pushOperation(
+                new SystemOperation("MATCH-001", "Organ-Patient Match",
+                        "Matched ORG-001 with PAT-002", true)
+        );
+        System.out.println("PUSH: MATCH-001 (Organ-Patient Match)");
+
+        operationsLog.pushOperation(
+                new SystemOperation("TRANSPLANT-001", "Schedule Transplant",
+                        "Scheduled transplant for PAT-002", true)
+        );
+        System.out.println("PUSH: TRANSPLANT-001 (Schedule Transplant)");
+
+        operationsLog.pushOperation(
+                new SystemOperation("EMERGENCY-001", "Emergency Case",
+                        "New emergency case for PAT-003", false)
+        );
+        System.out.println("PUSH: EMERGENCY-001 (Emergency Case)");
+
+        System.out.println("\nRecent Operations:");
+        List<SystemOperation> recentOps = operationsLog.getRecentOperations(3);
+        for (int i = 0; i < recentOps.size(); i++) {
+            System.out.println((i + 1) + ". " + recentOps.get(i) + (i == 0 ? " (Latest)" : ""));
         }
 
-        // 2. Demonstrate sorting
-        System.out.println("\n2. Demonstrating Organ Sorting...");
-        System.out.println("--------------------------------");
+        System.out.println("\nUndoing last operation...");
+        SystemOperation poppedOp = operationsLog.popLastOperation();
+        System.out.println("Popped: " + poppedOp.getOperationId());
+        System.out.println("Current top: " + operationsLog.peekLastOperation().getOperationId());
 
-        // Power Level sorting
-        System.out.println("\nSorted by Power Level (Quicksort):");
-        ArrayList<CyberneticOrgan> powerSorted = inventory.sortByPowerLevel();
-        printTopFiveOrgans(powerSorted, organ ->
-                String.format("ID: %s, Power Level: %d (%s)",
-                        organ.getId(),
-                        organ.getPowerLevel(),
-                        organ.getType()));
+        // 3. Demonstrate Emergency Waitlist
+        System.out.println("\n3. Emergency Waitlist");
+        System.out.println("-------------------");
+        System.out.println("Adding emergency cases...");
 
-        // Manufacture Date sorting
-        System.out.println("\nSorted by Manufacture Date (Mergesort):");
-        ArrayList<CyberneticOrgan> dateSorted = inventory.sortByManufactureDate();
-        printTopFiveOrgans(dateSorted, organ ->
-                String.format("ID: %s, Date: %s (%s)",
-                        organ.getId(),
-                        organ.getManufactureDate(),
-                        organ.getType()));
+        // Create sample patients with all required attributes
+        Patient patient1 = new Patient(
+                "PAT-001",
+                "John Doe",
+                45,
+                "A+",
+                "HEART",
+                8,
+                LocalDate.now().minusMonths(2),
+                "WAITING"
+        );
 
-        // Compatibility Score sorting
-        System.out.println("\nSorted by Compatibility Score (Bubblesort):");
-        ArrayList<CyberneticOrgan> compatibilitySorted = inventory.sortByCompatibilityScore();
-        printTopFiveOrgans(compatibilitySorted, organ ->
-                String.format("ID: %s, Compatibility: %.2f (%s)",
-                        organ.getId(),
-                        organ.getCompatibilityScore(),
-                        organ.getType()));
+        Patient patient2 = new Patient(
+                "PAT-002",
+                "Jane Smith",
+                52,
+                "B-",
+                "LUNG",
+                7,
+                LocalDate.now().minusMonths(1),
+                "WAITING"
+        );
 
-        // 3. Load and validate patients
-        validationErrors.clear();
-        System.out.println("\n3. Loading and Validating Patients...");
-        System.out.println("------------------------------------");
-        loadPatients(validPatients, validationErrors);
+        Patient patient3 = new Patient(
+                "PAT-003",
+                "Bob Wilson",
+                63,
+                "O+",
+                "KIDNEY",
+                9,
+                LocalDate.now().minusDays(15),
+                "WAITING"
+        );
 
-        // Print patient validation errors
-        System.out.println("\nPatient Validation Errors:");
-        System.out.println("-------------------------");
-        for (int i = 0; i < Math.min(5, validationErrors.size()); i++) {
-            System.out.println(validationErrors.get(i));
+        // Create emergency cases with specific registration times
+        EmergencyCase case1 = new EmergencyCase("EMERG-001",
+                patient1,
+                5,
+                LocalDateTime.now().minusMinutes(45)  // Registered 45 minutes ago
+        );
+        emergencyWaitlist.addEmergencyCase(case1);
+        System.out.println("Added: EMERG-001 (Severity: 5)");
+
+        EmergencyCase case2 = new EmergencyCase("EMERG-002",
+                patient2,
+                3,
+                LocalDateTime.now().minusMinutes(30)  // Registered 30 minutes ago
+        );
+        emergencyWaitlist.addEmergencyCase(case2);
+        System.out.println("Added: EMERG-002 (Severity: 3)");
+
+        EmergencyCase case3 = new EmergencyCase("EMERG-003",
+                patient3,
+                5,
+                LocalDateTime.now().minusMinutes(15)  // Registered 15 minutes ago
+        );
+        emergencyWaitlist.addEmergencyCase(case3);
+        System.out.println("Added: EMERG-003 (Severity: 5)");
+
+        System.out.println("\nNext urgent case:");
+        EmergencyCase nextCase = emergencyWaitlist.getNextUrgentCase();
+        System.out.println(nextCase);
+
+        System.out.println("\nUpdated EMERG-002 severity to 5");
+        emergencyWaitlist.updateCaseSeverity("EMERG-002", 5);
+
+        System.out.println("New urgent case order:");
+        EmergencyCase caseX;
+        int count = 1;
+        while ((
+                caseX = emergencyWaitlist.getNextUrgentCase()) != null) {
+            System.out.println(count++ + ". " + caseX);
         }
-        if (validationErrors.size() > 5) {
-            System.out.printf("[...%d more validation errors...]\n",
-                    validationErrors.size() - 5);
-        }
-    }
 
-    private static void loadOrgans(OrganInventory inventory, ArrayList<String> errors) {
-        try (InputStream is = Main.class.getResourceAsStream("/organs.csv");
-             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-
-            String line = reader.readLine(); // skip header
-            int successCount = 0;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("#")) continue;
-                String[] data = line.split(",");
-
-                try {
-                    CyberneticOrgan organ = new CyberneticOrgan(
-                            data[0].trim(),
-                            data[1].trim(),
-                            data[2].trim(),
-                            Integer.parseInt(data[3].trim()),
-                            Double.parseDouble(data[4].trim()),
-                            LocalDate.parse(data[5].trim()),
-                            data[6].trim(),
-                            data[7].trim()
-                    );
-
-                    inventory.addOrgan(organ);
-                    if (successCount < 5) {
-                        System.out.println("Successfully added: " + organ.getId());
-                    } else if (successCount == 5) {
-                        System.out.println("[...more successful additions...]");
-                    }
-                    successCount++;
-                } catch (IllegalArgumentException e) {
-                    errors.add("Error with organ " + data[0] + ": " + e.getMessage());
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Error reading organs file: " + e.getMessage());
-        }
-    }
-
-    private static void loadPatients(ArrayList<Patient> validPatients, ArrayList<String> errors) {
-        try (InputStream is = Main.class.getResourceAsStream("/patients.csv");
-             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-
-            String line = reader.readLine(); // skip header
-            int successCount = 0;
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("#")) continue;
-
-                String[] data = line.split(",");
-                try {
-                    Patient patient = new Patient(
-                            data[0].trim(),
-                            data[1].trim(),
-                            Integer.parseInt(data[2].trim()),
-                            data[3].trim(),
-                            data[4].trim(),
-                            Integer.parseInt(data[5].trim()),
-                            LocalDate.parse(data[6].trim()),
-                            data[7].trim()
-                    );
-
-                    validPatients.add(patient);
-                    if (successCount < 5) {
-                        System.out.printf("Successfully validated: %s - %s (Age: %d, Blood Type: %s, Organ Needed: %s)\n",
-                                patient.getId(), patient.getName(), patient.getAge(),
-                                patient.getBloodType(), patient.getOrganNeeded());
-                    } else if (successCount == 5) {
-                        System.out.println("[...more successful validations...]");
-                    }
-                    successCount++;
-                } catch (IllegalArgumentException e) {
-                    errors.add("Error with patient " + data[0] + ": " + e.getMessage());
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Error reading patients file: " + e.getMessage());
-        }
-    }
-
-    private static void printTopFiveOrgans(ArrayList<CyberneticOrgan> organs,
-                                           java.util.function.Function<CyberneticOrgan, String> formatter) {
-        for (int i = 0; i < Math.min(5, organs.size()); i++) {
-            System.out.println(formatter.apply(organs.get(i)));
-        }
-        if (organs.size() > 5) {
-            System.out.printf("[...%d more organs...]\n", organs.size() - 3);
-        }
+        // System Status Summary
+        System.out.println("\n4. System Status Summary");
+        System.out.println("----------------------");
+        System.out.println("Total transplant records: " + transplantHistory.getRecentTransplants(100).size());
+        System.out.println("Operations in log: " + operationsLog.getRecentOperations(100).size());
+        System.out.println("Emergency cases handled: " + (count - 1));
     }
 }
