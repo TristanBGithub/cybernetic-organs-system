@@ -1,8 +1,6 @@
 package com.cybernetic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class SystemOperationsLog {
@@ -27,7 +25,9 @@ public class SystemOperationsLog {
         if (isEmpty())
             throw new IllegalArgumentException("Log is empty");
 
-        return stack[top--];
+        SystemOperation last = stack[top];
+        stack[top--] = null;
+        return last;
     }
 
     public SystemOperation peekLastOperation() {
@@ -46,8 +46,12 @@ public class SystemOperationsLog {
     }
 
     public List<SystemOperation> getRecentOperations(int count) {
-        List<SystemOperation> recent = new ArrayList<>(Arrays.stream(Arrays.copyOfRange(stack, 0, count)).toList());
-        Collections.reverse(recent);
+        List<SystemOperation> recent = new ArrayList<>();
+        int i = 0;
+        while (i < count && stack[i] != null) {
+            recent.add(stack[i]);
+            i++;
+        }
         return recent;
     }
 

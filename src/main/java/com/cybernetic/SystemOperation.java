@@ -10,6 +10,7 @@ public class SystemOperation {
     boolean isReversible;
 
     public SystemOperation(String operationId, String operationType, String description, boolean isReversible) {
+
         this.operationId = operationId;
         this.operationType = operationType;
         this.timestamp = LocalDateTime.now();

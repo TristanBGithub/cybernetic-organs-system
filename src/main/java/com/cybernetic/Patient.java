@@ -13,7 +13,7 @@ public class Patient {
     private String status;
 
     public Patient(String id, String name, int age, String bloodType, String organNeeded, int urgencyLevel, LocalDate registrationDate, String status) {
-        if (!id.matches("PAT-\\d\\d\\d\\d"))
+        if (!id.matches("PAT-\\d\\d\\d"))
             throw new IllegalArgumentException("Patient ID is invalid.");
         else if (age <= 0 || age >= 120)
             throw new IllegalArgumentException("Patient age is invalid.");
@@ -34,6 +34,7 @@ public class Patient {
         this.urgencyLevel = urgencyLevel;
         this.registrationDate = registrationDate;
         this.status = status;
+
     }
 
     public String getId() {
